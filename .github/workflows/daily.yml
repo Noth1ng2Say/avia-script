@@ -1,0 +1,26 @@
+name: Run Python script daily
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Запуск каждый день в 06:00 UTC (09:00 по МСК)
+  workflow_dispatch:      # Позволяет вручную запускать в GitHub
+
+jobs:
+  run-script:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run script
+        run: python Bilets.py
