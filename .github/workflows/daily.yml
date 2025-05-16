@@ -23,4 +23,4 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run script
-        run: python Bilets.py
+        run: python Scrapper/Bilets.py
