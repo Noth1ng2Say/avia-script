@@ -22,5 +22,11 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Restore credentials.json
+        run: |
+          echo "${{ secrets.GCP_CREDENTIALS_JSON }}" | base64 --decode > credentials.json
+
       - name: Run script
         run: python Pars/Bilets.py
+        env:
+          AVIASALES_TOKEN: ${{ secrets.AVIASALES_TOKEN }}
