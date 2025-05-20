@@ -29,4 +29,5 @@ jobs:
       - name: Run script
         run: python Pars/Bilets.py
         env:
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           AVIASALES_TOKEN: ${{ secrets.AVIASALES_TOKEN }}
