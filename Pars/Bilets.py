@@ -4,9 +4,29 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime, timedelta
 import time
 import os
+import smtplib
+from email.mime.text import MIMEText
+from dotenv import load_dotenv
+load_dotenv()
 
 token = os.environ.get("AVIASALES_TOKEN")
 url = 'https://api.travelpayouts.com/aviasales/v3/prices_for_dates'
+
+#email рассылка
+SMTP_SERVER = "smtp.yandex.ru"
+SMTP_PORT = 465
+EMAIL_SENDER = "m.krylov.a@yandex.ru"
+EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
+EMAIL_RECEIVERS = ["cattrap.3s@gmail.com", "kurchavovr@gmail.com"]
+
+
+THRESHOLD_TO = 20000
+THRESHOLD_BACK = 22000
+
+watch_routes_to = {'KZN→KIX', 'KZN→TYO', 'KZN→FUK'}
+watch_routes_back = {'KIX→KZN', 'TYO→KZN'}
+
+alerts = []
 
 # Авторизация в Google Sheets
 scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]
@@ -57,6 +77,7 @@ tickets_back = []
 while start_date <= end_date:
     departure_date = start_date.strftime('%Y-%m-%d')
     return_date = (start_date + timedelta(days=10)).strftime('%Y-%m-%d')
+    print(f"Обрабатываю дату: {departure_date}...")
 
     # Туда
     for origin in origins_to:
@@ -77,15 +98,27 @@ while start_date <= end_date:
                     if ticket.get('transfers', 2) <= 1:
                         duration_min = ticket.get('duration', 0)
                         hours, minutes = divmod(duration_min, 60)
+                        price = ticket.get('price', 999999)
+
+                        route_key = f"{origin}→{destination}"
+                        if route_key in watch_routes_to and price <= THRESHOLD_TO:
+                            alerts.append(
+                                f"🔥 Дешевый билет ТУДА!\n"
+                                f"{airport_city_map[origin]} → {airport_city_map[destination]}\n"
+                                f"Дата: {departure_date}\n"
+                                f"Цена: {price} руб.\n"
+                                f"Авиакомпания: {ticket.get('airline', '—')}\n"
+                                f"Рейс: {ticket.get('flight_number', '—')}"
+                                f"-----------------------------------------------------\n"
+                            )
+
                         tickets_to.append([
-                            departure_date,
-                            ticket.get('price', '—'),
-                            ticket.get('airline', '—'),
-                            ticket.get('flight_number', '—'),
+                            departure_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
                             f"{hours}ч {minutes}м",
                             f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
                         ])
-                        break  # Берем только первый подходящий билет
+                        break
+
 
     # Обратно
     for origin in origins_back:
@@ -106,15 +139,27 @@ while start_date <= end_date:
                     if ticket.get('transfers', 2) <= 1:
                         duration_min = ticket.get('duration', 0)
                         hours, minutes = divmod(duration_min, 60)
+                        price = ticket.get('price', 999999)
+
+                        route_key = f"{origin}→{destination}"
+                        if route_key in watch_routes_back and price <= THRESHOLD_BACK:
+                            alerts.append(
+                                f"🔥 Дешевый билет ОБРАТНО!\n"
+                                f"{airport_city_map[origin]} → {airport_city_map[destination]}\n"
+                                f"Дата: {return_date}\n"
+                                f"Цена: {price} руб.\n"
+                                f"Авиакомпания: {ticket.get('airline', '—')}\n"
+                                f"Рейс: {ticket.get('flight_number', '—')}"
+                                f"-----------------------------------------------------\n"
+                            )
+
                         tickets_back.append([
-                            return_date,
-                            ticket.get('price', '—'),
-                            ticket.get('airline', '—'),
-                            ticket.get('flight_number', '—'),
+                            return_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
                             f"{hours}ч {minutes}м",
                             f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
                         ])
                         break
+
 
     time.sleep(1)
     start_date += timedelta(days=1)
@@ -136,3 +181,18 @@ if tickets_back:
 today = datetime.today().strftime('%d-%m-%Y')
 
 worksheet_back.append_row(["", "", "", "", "", f"Дата запроса: {today}"])
+
+# --- Отправка email если есть дешевые билеты ---
+if alerts:
+    message_body = "\n\n".join(alerts)
+    msg = MIMEText(message_body, "plain", "utf-8")
+    msg['Subject'] = "🚨 Внимание! Внимание! Найдены дешевые авиабилеты! Кто не купит тот jay"
+    msg['From'] = EMAIL_SENDER
+    msg['To'] = ", ".join(EMAIL_RECEIVERS)
+
+    try:
+        with smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT) as server:
+            server.login(EMAIL_SENDER, EMAIL_PASSWORD)
+            server.send_message(msg)
+    except Exception as e:
+        print("❌ Ошибка при отправке email:", e)
