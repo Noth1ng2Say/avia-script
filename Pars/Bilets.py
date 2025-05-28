@@ -23,8 +23,8 @@ EMAIL_RECEIVERS = ["cattrap.3s@gmail.com", "kurchavovr@gmail.com"]
 THRESHOLD_TO = 22000
 THRESHOLD_BACK = 26000
 
-watch_routes_to = {'KZN→KIX', 'KZN→TYO', 'KZN→FUK'}
-watch_routes_back = {'KIX→KZN', 'TYO→KZN'}
+watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK'}
+watch_routes_back = {'KIX→KZN', 'HND→KZN', 'NRT→KZN'}
 
 alerts = []
 
@@ -59,7 +59,7 @@ worksheet_back.append_row([
 # Карта кодов в города
 airport_city_map = {
     'KZN': 'Казань', 'CEK': 'Челябинск', 'SVX': 'Екатеринбург',
-    'KIX': 'Осака', 'TYO': 'Токио', 'FUK': 'Фукуока'
+    'KIX': 'Осака', 'HND': 'Токио.Ханеда', 'NRT': 'Токио.Нарита', 'FUK': 'Фукуока'
 }
 
 # Отдельные списки
