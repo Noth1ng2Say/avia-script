@@ -64,8 +64,8 @@ airport_city_map = {
 
 # Отдельные списки
 origins_to = ['KZN', 'CEK', 'SVX']
-destinations_to = ['KIX', 'TYO', 'FUK']
-origins_back = ['KIX', 'TYO']
+destinations_to = ['KIX', 'NRT', 'FUK', 'HND']
+origins_back = ['KIX', 'NRT', 'HND']
 destinations_back = ['KZN', 'CEK', 'SVX']
 
 start_date = datetime(2025, 9, 1)
