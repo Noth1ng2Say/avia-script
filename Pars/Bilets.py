@@ -20,8 +20,8 @@ EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_RECEIVERS = ["cattrap.3s@gmail.com", "kurchavovr@gmail.com"]
 
 
-THRESHOLD_TO = 20000
-THRESHOLD_BACK = 22000
+THRESHOLD_TO = 22000
+THRESHOLD_BACK = 26000
 
 watch_routes_to = {'KZN→KIX', 'KZN→TYO', 'KZN→FUK'}
 watch_routes_back = {'KIX→KZN', 'TYO→KZN'}
@@ -58,12 +58,12 @@ worksheet_back.append_row([
 
 # Карта кодов в города
 airport_city_map = {
-    'MOW': 'Москва', 'KZN': 'Казань', 'CEK': 'Челябинск', 'SVX': 'Екатеринбург',
+    'KZN': 'Казань', 'CEK': 'Челябинск', 'SVX': 'Екатеринбург',
     'KIX': 'Осака', 'TYO': 'Токио', 'FUK': 'Фукуока'
 }
 
 # Отдельные списки
-origins_to = ['MOW', 'KZN', 'CEK', 'SVX']
+origins_to = ['KZN', 'CEK', 'SVX']
 destinations_to = ['KIX', 'TYO', 'FUK']
 origins_back = ['KIX', 'TYO']
 destinations_back = ['KZN', 'CEK', 'SVX']
