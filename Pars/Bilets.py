@@ -69,7 +69,7 @@ origins_back = ['KIX', 'NRT', 'HND', 'FUK', 'NGO', 'SPK', 'KMJ']
 destinations_back = ['KZN']
 
 start_date = datetime(2026, 3, 15)
-end_date = datetime(2025, 4, 12)
+end_date = datetime(2026, 4, 12)
 
 tickets_to = []
 tickets_back = []
