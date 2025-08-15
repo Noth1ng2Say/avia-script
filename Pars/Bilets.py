@@ -17,14 +17,14 @@ SMTP_SERVER = "smtp.yandex.ru"
 SMTP_PORT = 465
 EMAIL_SENDER = "m.krylov.a@yandex.ru"
 EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
-EMAIL_RECEIVERS = ["cattrap.3s@gmail.com", "kurchavovr@gmail.com"]
+EMAIL_RECEIVERS = ["cattrap.3s@gmail.com"]
 
 
-THRESHOLD_TO = 22000
-THRESHOLD_BACK = 26000
+THRESHOLD_TO = 30000
+THRESHOLD_BACK = 30000
 
-watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK'}
-watch_routes_back = {'KIX→KZN', 'HND→KZN', 'NRT→KZN'}
+watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK', 'KZN→NGO', 'KZN→SPK', 'KZN→KMJ'}
+watch_routes_back = {'KIX→KZN', 'HND→KZN', 'NRT→KZN', 'FUK→KZN', 'NGO→KZN', 'SPK→KZN', 'KMJ→KZN'}
 
 alerts = []
 
@@ -58,25 +58,25 @@ worksheet_back.append_row([
 
 # Карта кодов в города
 airport_city_map = {
-    'KZN': 'Казань', 'CEK': 'Челябинск', 'SVX': 'Екатеринбург',
+    'KZN': 'Казань', 'NGO': 'Нагоя', 'SPK': 'Саппоро', 'KMJ': 'Кумамото',
     'KIX': 'Осака', 'HND': 'Токио.Ханеда', 'NRT': 'Токио.Нарита', 'FUK': 'Фукуока'
 }
 
 # Отдельные списки
-origins_to = ['KZN', 'CEK', 'SVX']
-destinations_to = ['KIX', 'NRT', 'FUK', 'HND']
-origins_back = ['KIX', 'NRT', 'HND']
-destinations_back = ['KZN', 'CEK', 'SVX']
+origins_to = ['KZN']
+destinations_to = ['KIX', 'NRT', 'FUK', 'HND', 'NGO', 'SPK', 'KMJ']
+origins_back = ['KIX', 'NRT', 'HND', 'FUK', 'NGO', 'SPK', 'KMJ']
+destinations_back = ['KZN']
 
-start_date = datetime(2025, 9, 1)
-end_date = datetime(2025, 10, 20)
+start_date = datetime(2026, 3, 15)
+end_date = datetime(2025, 4, 12)
 
 tickets_to = []
 tickets_back = []
 
 while start_date <= end_date:
     departure_date = start_date.strftime('%Y-%m-%d')
-    return_date = (start_date + timedelta(days=10)).strftime('%Y-%m-%d')
+    return_date = (start_date + timedelta(days=12)).strftime('%Y-%m-%d')
     print(f"Обрабатываю дату: {departure_date}...")
 
     # Туда
@@ -186,7 +186,7 @@ worksheet_back.append_row(["", "", "", "", "", f"Дата запроса: {today
 if alerts:
     message_body = "\n\n".join(alerts)
     msg = MIMEText(message_body, "plain", "utf-8")
-    msg['Subject'] = "🚨 Внимание! Внимание! Найдены дешевые авиабилеты! Кто не купит тот jay"
+    msg['Subject'] = "🚨 Внимание! Внимание! Найдены дешевые авиабилеты! Кто не купит тот гау"
     msg['From'] = EMAIL_SENDER
     msg['To'] = ", ".join(EMAIL_RECEIVERS)
 
