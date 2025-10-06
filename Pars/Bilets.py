@@ -68,15 +68,15 @@ destinations_to = ['KIX', 'NRT', 'FUK', 'HND', 'NGO', 'SPK', 'KMJ']
 origins_back = ['KIX', 'NRT', 'HND', 'FUK', 'NGO', 'SPK', 'KMJ']
 destinations_back = ['KZN']
 
-start_date = datetime(2026, 3, 20)
-end_date = datetime(2026, 4, 12)
+start_date = datetime(2026, 4, 22)
+end_date = datetime(2026, 5, 3)
 
 tickets_to = []
 tickets_back = []
 
 while start_date <= end_date:
     departure_date = start_date.strftime('%Y-%m-%d')
-    return_date = (start_date + timedelta(days=12)).strftime('%Y-%m-%d')
+    return_date = (start_date + timedelta(days=10)).strftime('%Y-%m-%d')
     print(f"Обрабатываю дату: {departure_date}...")
 
     # Туда
