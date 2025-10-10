@@ -20,8 +20,8 @@ EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_RECEIVERS = ["cattrap.3s@gmail.com"]
 
 
-THRESHOLD_TO = 30000
-THRESHOLD_BACK = 30000
+THRESHOLD_TO = 26500
+THRESHOLD_BACK = 37500
 
 watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK', 'KZN→NGO', 'KZN→SPK', 'KZN→KMJ'}
 watch_routes_back = {'KIX→KZN', 'HND→KZN', 'NRT→KZN', 'FUK→KZN', 'NGO→KZN', 'SPK→KZN', 'KMJ→KZN'}
@@ -68,124 +68,131 @@ destinations_to = ['KIX', 'NRT', 'FUK', 'HND', 'NGO', 'SPK', 'KMJ']
 origins_back = ['KIX', 'NRT', 'HND', 'FUK', 'NGO', 'SPK', 'KMJ']
 destinations_back = ['KZN']
 
-start_date = datetime(2026, 4, 19)
-end_date = datetime(2026, 5, 9)
+# Диапазон дат
+departure_start = '2026-04-19'
+departure_end = '2026-05-09'
+return_start = '2026-04-19'
+return_end = '2026-05-15'
 
 tickets_to = []
 tickets_back = []
 
-while start_date <= end_date:
-    departure_date = start_date.strftime('%Y-%m-%d')
-    return_date = (start_date + timedelta(days=0)).strftime('%Y-%m-%d')
-    print(f"Обрабатываю дату: {departure_date}...")
 
-    # Туда
-    for origin in origins_to:
-        for destination in destinations_to:
-            params_to = {
-                'origin': origin,
-                'destination': destination,
-                'currency': 'rub',
-                'sorting': 'price',
-                'limit': 30,
-                'token': token
-            }
-            response = requests.get(url, params=params_to)
-            data_to = response.json()
+# Туда
+for origin in origins_to:
+    for destination in destinations_to:
+        params_to = {
+            'origin': origin,
+            'destination': destination,
+            'departure_at': departure_start,  # начальная дата
+            'currency': 'rub',
+            'sorting': 'price',
+            'limit': 30,
+            'token': token,
+            'one_way': 'true'
+        }
+        response = requests.get(url, params=params_to)
+        data_to = response.json()
 
-            if data_to.get('success') and data_to.get('data'):
-                for ticket in data_to['data']:
-                    if ticket.get('transfers', 2) <= 1:
-                        duration_min = ticket.get('duration', 0)
-                        hours, minutes = divmod(duration_min, 60)
-                        price = ticket.get('price', 999999)
-                        
-                        # Преобразование даты из API в нужный формат
-                        date_from_api = ticket.get('departure_at', '—')
-                        if date_from_api != '—':
-                            try:
-                                
-                                parsed_date = datetime.fromisoformat(date_from_api.replace('Z', '+00:00'))
-                                
-                                formatted_date = parsed_date.strftime('%d.%m.%Y')
-                            except:
-                                formatted_date = '—'
-                        else:
-                            formatted_date = '—'
-
-                        route_key = f"{origin}→{destination}"
-                        if route_key in watch_routes_to and price <= THRESHOLD_TO:
-                            alerts.append(
-                                f"🔥 Дешевый билет ТУДА!\n"
-                                f"{airport_city_map[origin]} → {airport_city_map[destination]}\n"
-                                f"Дата: {formatted_date}\n"
-                                f"Цена: {price} руб.\n"
-                                f"Авиакомпания: {ticket.get('airline', '—')}\n"
-                                f"Рейс: {ticket.get('flight_number', '—')}"
-                                f"-----------------------------------------------------\n"
-                            )
+        if data_to.get('success') and data_to.get('data'):
+            for ticket in data_to['data']:
+                if ticket.get('transfers', 2) <= 1:
+                    duration_min = ticket.get('duration', 0)
+                    hours, minutes = divmod(duration_min, 60)
+                    price = ticket.get('price', 999999)
+                    
+                    # Преобразование даты из API в нужный формат
+                    date_from_api = ticket.get('departure_at', '—')
+                    if date_from_api != '—':
+                        try:
+                            parsed_date = datetime.fromisoformat(date_from_api.replace('Z', '+00:00'))
+                            formatted_date = parsed_date.strftime('%d.%m.%Y')
                             
-                        tickets_to.append([
-                            formatted_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
-                            f"{hours}ч {minutes}м",
-                            f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
-                        ])
-                        break
-
-
-    # Обратно
-    for origin in origins_back:
-        for destination in destinations_back:
-            params_back = {
-                'origin': origin,
-                'destination': destination,
-                'currency': 'rub',
-                'sorting': 'price',
-                'limit': 30,
-                'token': token
-            }
-            response = requests.get(url, params=params_back)
-            data_back = response.json()
-
-            if data_back.get('success') and data_back.get('data'):
-                for ticket in data_back['data']:
-                    if ticket.get('transfers', 2) <= 1:
-                        duration_min = ticket.get('duration', 0)
-                        hours, minutes = divmod(duration_min, 60)
-                        price = ticket.get('price', 999999)
-
-                        date_from_api = ticket.get('departure_at', '—')
-                        if date_from_api != '—':
-                            try:
-                                parsed_date = datetime.fromisoformat(date_from_api.replace('Z', '+00:00'))
-                                formatted_date = parsed_date.strftime('%d.%m.%Y')
-                            except:
-                                formatted_date = '—'
-                        else:
+                            # Проверка диапазона дат для ТУДА
+                            ticket_date = parsed_date.date()
+                            range_start = datetime(2026, 4, 19).date()
+                            range_end = datetime(2026, 5, 9).date()
+                            
+                            if range_start <= ticket_date <= range_end:
+                                route_key = f"{origin}→{destination}"
+                                if route_key in watch_routes_to and price <= THRESHOLD_TO:
+                                    alerts.append(
+                                        f"🔥 Дешевый билет ТУДА!\n"
+                                        f"{airport_city_map[origin]} → {airport_city_map[destination]}\n"
+                                        f"Дата: {formatted_date}\n"
+                                        f"Цена: {price} руб.\n"
+                                        f"Авиакомпания: {ticket.get('airline', '—')}\n"
+                                        f"Рейс: {ticket.get('flight_number', '—')}"
+                                        f"-----------------------------------------------------\n"
+                                    )
+                                    
+                                tickets_to.append([
+                                    formatted_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
+                                    f"{hours}ч {minutes}м",
+                                    f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
+                                ])
+                        except:
                             formatted_date = '—'
-
-                        route_key = f"{origin}→{destination}"
-                        if route_key in watch_routes_back and price <= THRESHOLD_BACK:
-                            alerts.append(
-                                f"🔥 Дешевый билет ОБРАТНО!\n"
-                                f"{airport_city_map[origin]} → {airport_city_map[destination]}\n"
-                                f"Дата: {formatted_date}\n"
-                                f"Цена: {price} руб.\n"
-                                f"Авиакомпания: {ticket.get('airline', '—')}\n"
-                                f"Рейс: {ticket.get('flight_number', '—')}"
-                                f"-----------------------------------------------------\n"
-                            )
-
-                        tickets_back.append([
-                            formatted_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
-                            f"{hours}ч {minutes}м",
-                            f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
-                        ])
-                        break
+        time.sleep(1)
 
 
-    time.sleep(1)
-    start_date += timedelta(days=1)
+# Обратно
+for origin in origins_back:
+    for destination in destinations_back:
+        params_back = {
+            'origin': origin,
+            'destination': destination,
+            'departure_at': return_start,
+            'currency': 'rub',
+            'sorting': 'price',
+            'limit': 30,
+            'token': token,
+            'one_way': 'true'
+        }
+        response = requests.get(url, params=params_back)
+        data_back = response.json()
+
+        if data_back.get('success') and data_back.get('data'):
+            for ticket in data_back['data']:
+                if ticket.get('transfers', 2) <= 1:
+                    duration_min = ticket.get('duration', 0)
+                    hours, minutes = divmod(duration_min, 60)
+                    price = ticket.get('price', 999999)
+
+                    date_from_api = ticket.get('departure_at', '—')
+                    if date_from_api != '—':
+                        try:
+                            parsed_date = datetime.fromisoformat(date_from_api.replace('Z', '+00:00'))
+                            formatted_date = parsed_date.strftime('%d.%m.%Y')
+                            
+                            # Проверка диапазона дат для ОБРАТНО
+                            ticket_date = parsed_date.date()
+                            range_start = datetime(2026, 4, 19).date()
+                            range_end = datetime(2026, 5, 15).date()
+                            
+                            if range_start <= ticket_date <= range_end:
+                                route_key = f"{origin}→{destination}"
+                                if route_key in watch_routes_back and price <= THRESHOLD_BACK:
+                                    alerts.append(
+                                        f"🔥 Дешевый билет ОБРАТНО!\n"
+                                        f"{airport_city_map[origin]} → {airport_city_map[destination]}\n"
+                                        f"Дата: {formatted_date}\n"
+                                        f"Цена: {price} руб.\n"
+                                        f"Авиакомпания: {ticket.get('airline', '—')}\n"
+                                        f"Рейс: {ticket.get('flight_number', '—')}"
+                                        f"-----------------------------------------------------\n"
+                                    )
+            
+                                tickets_back.append([
+                                    formatted_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
+                                    f"{hours}ч {minutes}м",
+                                    f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
+                                ])
+                        except:
+                            formatted_date = '—'
+        time.sleep(1)
+
+
 
 # Сортировка по цене
 tickets_to.sort(key=lambda x: x[1])
