@@ -113,7 +113,7 @@ while start_date <= end_date:
                             )
 
                         tickets_to.append([
-                            departure_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
+                            ticket.get('departure_at', '—'), price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
                             f"{hours}ч {minutes}м",
                             f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
                         ])
@@ -154,7 +154,7 @@ while start_date <= end_date:
                             )
 
                         tickets_back.append([
-                            return_date, price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
+                            ticket.get('departure_at', '—'), price, ticket.get('airline', '—'), ticket.get('flight_number', '—'),
                             f"{hours}ч {minutes}м",
                             f"{airport_city_map.get(origin)} → {airport_city_map.get(destination)}"
                         ])
