@@ -68,11 +68,6 @@ destinations_to = ['KIX', 'NRT', 'FUK', 'HND', 'NGO', 'SPK', 'KMJ']
 origins_back = ['KIX', 'NRT', 'HND', 'FUK', 'NGO', 'SPK', 'KMJ']
 destinations_back = ['KZN']
 
-# Диапазон дат
-departure_start = '2026-04-19'
-departure_end = '2026-05-09'
-return_start = '2026-04-19'
-return_end = '2026-05-15'
 
 tickets_to = []
 tickets_back = []
@@ -84,7 +79,6 @@ for origin in origins_to:
         params_to = {
             'origin': origin,
             'destination': destination,
-            'departure_at': departure_start,  # начальная дата
             'currency': 'rub',
             'sorting': 'price',
             'limit': 30,
@@ -142,7 +136,6 @@ for origin in origins_back:
         params_back = {
             'origin': origin,
             'destination': destination,
-            'departure_at': return_start,
             'currency': 'rub',
             'sorting': 'price',
             'limit': 30,
