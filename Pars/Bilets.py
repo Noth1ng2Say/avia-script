@@ -105,7 +105,7 @@ for origin in origins_to:
                             
                             # Проверка диапазона дат для ТУДА
                             ticket_date = parsed_date.date()
-                            range_start = datetime(2026, 4, 19).date()
+                            range_start = datetime(2026, 3, 19).date()
                             range_end = datetime(2026, 5, 9).date()
                             
                             if range_start <= ticket_date <= range_end:
@@ -161,7 +161,7 @@ for origin in origins_back:
                             
                             # Проверка диапазона дат для ОБРАТНО
                             ticket_date = parsed_date.date()
-                            range_start = datetime(2026, 4, 19).date()
+                            range_start = datetime(2026, 3, 25).date()
                             range_end = datetime(2026, 5, 15).date()
                             
                             if range_start <= ticket_date <= range_end:
