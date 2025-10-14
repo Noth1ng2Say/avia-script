@@ -20,10 +20,10 @@ EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_RECEIVERS = ["cattrap.3s@gmail.com"]
 
 
-THRESHOLD_TO = 26500
-THRESHOLD_BACK = 37500
+THRESHOLD_TO = 26000
+THRESHOLD_BACK = 37000
 
-watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK', 'KZN→NGO', 'KZN→SPK', 'KZN→KMJ'}
+watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK', 'KZN→NGO', 'KZN→SPK', 'KZN→KMJ', 'KZN→SDJ', 'KZN→TOY'}
 watch_routes_back = {'KIX→KZN', 'HND→KZN', 'NRT→KZN', 'FUK→KZN', 'NGO→KZN', 'SPK→KZN', 'KMJ→KZN'}
 
 alerts = []
@@ -59,7 +59,8 @@ worksheet_back.append_row([
 # Карта кодов в города
 airport_city_map = {
     'KZN': 'Казань', 'NGO': 'Нагоя', 'SPK': 'Саппоро', 'KMJ': 'Кумамото',
-    'KIX': 'Осака', 'HND': 'Токио.Ханеда', 'NRT': 'Токио.Нарита', 'FUK': 'Фукуока'
+    'KIX': 'Осака', 'HND': 'Токио.Ханеда', 'NRT': 'Токио.Нарита', 'FUK': 'Фукуока',
+    'SDJ': 'Sendai', 'TOY': 'Toyama'
 }
 
 # Отдельные списки
