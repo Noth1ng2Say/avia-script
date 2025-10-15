@@ -82,7 +82,7 @@ for origin in origins_to:
             'destination': destination,
             'currency': 'rub',
             'sorting': 'price',
-            'limit': 30,
+            'limit': 50,
             'token': token,
             'one_way': 'true'
         }
@@ -91,7 +91,7 @@ for origin in origins_to:
 
         if data_to.get('success') and data_to.get('data'):
             for ticket in data_to['data']:
-                if ticket.get('transfers', 2) <= 1:
+                if ticket.get('transfers', 2) <= 2:
                     duration_min = ticket.get('duration', 0)
                     hours, minutes = divmod(duration_min, 60)
                     price = ticket.get('price', 999999)
@@ -139,7 +139,7 @@ for origin in origins_back:
             'destination': destination,
             'currency': 'rub',
             'sorting': 'price',
-            'limit': 30,
+            'limit': 50,
             'token': token,
             'one_way': 'true'
         }
@@ -148,7 +148,7 @@ for origin in origins_back:
 
         if data_back.get('success') and data_back.get('data'):
             for ticket in data_back['data']:
-                if ticket.get('transfers', 2) <= 1:
+                if ticket.get('transfers', 2) <= 2:
                     duration_min = ticket.get('duration', 0)
                     hours, minutes = divmod(duration_min, 60)
                     price = ticket.get('price', 999999)
