@@ -20,7 +20,7 @@ EMAIL_PASSWORD = os.environ.get("EMAIL_PASSWORD")
 EMAIL_RECEIVERS = ["cattrap.3s@gmail.com"]
 
 
-THRESHOLD_TO = 26000
+THRESHOLD_TO = 25500
 THRESHOLD_BACK = 37000
 
 watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK', 'KZN→NGO', 'KZN→SPK', 'KZN→KMJ', 'KZN→SDJ', 'KZN→TOY'}
