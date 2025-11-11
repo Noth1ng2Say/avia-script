@@ -21,7 +21,7 @@ EMAIL_RECEIVERS = ["cattrap.3s@gmail.com"]
 
 
 THRESHOLD_TO = 25000
-THRESHOLD_BACK = 37000
+THRESHOLD_BACK = 36000
 
 watch_routes_to = {'KZN→KIX', 'KZN→HND', 'KZN→NRT', 'KZN→FUK', 'KZN→NGO', 'KZN→SPK', 'KZN→KMJ', 'KZN→SDJ', 'KZN→TOY'}
 watch_routes_back = {'KIX→KZN', 'HND→KZN', 'NRT→KZN', 'FUK→KZN', 'NGO→KZN', 'SPK→KZN', 'KMJ→KZN'}
@@ -105,8 +105,8 @@ for origin in origins_to:
                             
                             # Проверка диапазона дат для ТУДА
                             ticket_date = parsed_date.date()
-                            range_start = datetime(2026, 5, 1).date()
-                            range_end = datetime(2026, 5, 15).date()
+                            range_start = datetime(2026, 4, 29).date()
+                            range_end = datetime(2026, 5, 13).date()
                             
                             if range_start <= ticket_date <= range_end:
                                 route_key = f"{origin}→{destination}"
@@ -162,7 +162,7 @@ for origin in origins_back:
                             # Проверка диапазона дат для ОБРАТНО
                             ticket_date = parsed_date.date()
                             range_start = datetime(2026, 5, 13).date()
-                            range_end = datetime(2026, 5, 31).date()
+                            range_end = datetime(2026, 5, 23).date()
                             
                             if range_start <= ticket_date <= range_end:
                                 route_key = f"{origin}→{destination}"
