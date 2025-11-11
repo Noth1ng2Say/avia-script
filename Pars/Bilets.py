@@ -162,7 +162,7 @@ for origin in origins_back:
                             # Проверка диапазона дат для ОБРАТНО
                             ticket_date = parsed_date.date()
                             range_start = datetime(2026, 5, 13).date()
-                            range_end = datetime(2026, 5, 23).date()
+                            range_end = datetime(2026, 5, 21).date()
                             
                             if range_start <= ticket_date <= range_end:
                                 route_key = f"{origin}→{destination}"
